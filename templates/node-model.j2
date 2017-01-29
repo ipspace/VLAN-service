@@ -22,10 +22,6 @@
 {%   endif %}
 {% endfor %}
   ],
-{#
-  The data model contains a dirty hack - there's an empty key at the end of the dictionary
-  because it was way too hard to get the number of commas right ;)
-#}
   "ports": {
 {% set count = [] %}
 {% for customer,svc in services.iteritems() 
