@@ -6,8 +6,8 @@
     output: "{{inventory_dir}}/printouts"
     model:  "../templates/node-model.j2"
   tasks:
-  - include_vars: 
-      file: "{{input}}" 
+  - include_vars:
+      file: "{{input}}"
       name: services
   - template:
       src:  "{{model}}"

@@ -2,9 +2,9 @@
 - hosts: all
   name:  configure VLAN service
   tasks:
-  - include_vars: 
-      file: "{{svcs|default(inventory_dir~'/services.yml')}}" 
-      name: services
+  - include_vars:
+      file: "{{svcs|default(inventory_dir~'/services.yml')}}"
+      name: "services"
     tags: [ always ]
   - include: tests/enable-debugging.yml
 
