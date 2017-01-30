@@ -17,3 +17,5 @@
 - set_fact:
     data: "{{data|combine(lookup('template','../templates/cleanup-remove-vlans.j2'))}}"
   when: vlan_list is defined
+
+- set_fact: debug_phase="-cleanup"

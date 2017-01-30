@@ -9,6 +9,11 @@
     mode:        layer2
     description: "No service on this port"
   with_items: "{{data.remove_ports}}"
+  register: nxos_remove_ports
+- local_action: >
+    copy content="{{nxos_remove_ports|to_nice_json}}"
+         dest="{{debug_output}}/{{inventory_hostname}}-remove-ports{{debug_phase|default('')}}.json"
+  when: debug_output is defined
 
 - nxos_switchport:
     provider: "{{cli}}"
@@ -16,9 +21,20 @@
     access_vlan: 1
     interface:   "{{item}}"
   with_items: "{{data.remove_ports}}"
+  register: nxos_remove_access
+- local_action: >
+    copy content="{{nxos_remove_access|to_nice_json}}"
+         dest="{{debug_output}}/{{inventory_hostname}}-remove-access{{debug_phase|default('')}}.json"
+  when: debug_output is defined
 
 - nxos_vlan:
     provider: "{{cli}}"
     vlan_id: "{{item}}" 
     state:   "absent"
   with_items: "{{data.remove_vlans}}"
+  register: nxos_remove_vlans
+- local_action: >
+    copy content="{{nxos_remove_vlans|to_nice_json}}"
+         dest="{{debug_output}}/{{inventory_hostname}}-remove-vlans{{debug_phase|default('')}}.json"
+  when: debug_output is defined
+

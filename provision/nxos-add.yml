@@ -9,6 +9,11 @@
     state:   "present"
     admin_state: "up"
   with_dict: "{{data.vlans}}"
+  register: provision_vlans
+- local_action: >
+    copy content="{{provision_vlans|to_nice_json}}"
+         dest="{{debug_output}}/{{inventory_hostname}}-provision-vlans.json"
+  when: debug_output is defined
 
 - nxos_interface:
     provider: "{{cli}}"
@@ -18,6 +23,11 @@
     description: "{{item.value.description}}"
   with_dict: "{{data.ports}}"
   when: "item.key"
+  register: provision_interfaces
+- local_action: >
+    copy content="{{provision_interfaces|to_nice_json}}"
+         dest="{{debug_output}}/{{inventory_hostname}}-provision-interfaces.json"
+  when: debug_output is defined
 
 - nxos_switchport:
     provider: "{{cli}}"
@@ -26,3 +36,8 @@
     interface:   "{{item.key}}"
   with_dict: "{{data.ports}}"
   when: "item.key"
+  register: provision_switchports
+- local_action: >
+    copy content="{{provision_switchports|to_nice_json}}"
+         dest="{{debug_output}}/{{inventory_hostname}}-provision-switchports.json"
+  when: debug_output is defined
