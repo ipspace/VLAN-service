@@ -11,9 +11,11 @@
   - copy: 
       content: "{{nxos_results.stdout[0]}}"
       dest:    "{{debug_output}}/{{inventory_hostname}}-get-raw.json"
+    delegate_to: localhost
   - template: 
       src:  nxos-interfaces.j2
       dest: "{{debug_output}}/{{inventory_hostname}}-get-interfaces.json"
+    delegate_to: localhost
   when: debug_output is defined
 
 - set_fact: 

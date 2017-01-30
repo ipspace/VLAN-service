@@ -1,0 +1,10 @@
+#
+# Enable debugging when the 'debug' variable is set
+#
+- block:
+  - set_fact: 
+      debug_output: "{{inventory_dir}}/printouts/debug"
+    name: Enable debugging
+  - local_action: file path="{{debug_output}}" state=directory
+    run_once: true
+  when: debug is defined
