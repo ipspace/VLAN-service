@@ -1,0 +1,12 @@
+---
+ACME:
+  vlan: 100
+  ports:
+  - { node: leaf-1, port: "Ethernet2/1", site: "ACME Downtown" }
+  - { node: leaf-2, port: "Ethernet2/3", site: "ACME Remote" }
+
+Wonka:
+  vlan: 101
+  ports:
+  - { node: leaf-1, port: "Ethernet2/3"}
+  - { node: leaf-2, port: "Ethernet2/2" }
