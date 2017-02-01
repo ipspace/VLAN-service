@@ -10,9 +10,6 @@
     tags: [ always ]
   - include: tests/enable-debugging.yml
 
-  - include: "../validate/predeploy-node-check.yml"
-    tags: [ predeploy ]
-
   - set_fact: data="{{lookup('template','templates/node-model.j2')}}"
     tags: [ always ]
   - local_action: >
@@ -20,7 +17,7 @@
            dest="{{debug_output}}/{{inventory_hostname}}-model.json"
     when: debug_output is defined
 
-  - include: "../validate/predeploy-interface-check.yml"
+  - include: "validate/predeploy-checks.yml"
     tags: [ predeploy ]
 
   - name: "Add/modify VLAN services"

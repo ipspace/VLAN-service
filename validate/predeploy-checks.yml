@@ -1,0 +1,6 @@
+#
+# List of pre-deployment checks
+#
+- include: "predeploy-node-check.yml"
+- include: "predeploy-vlan-check.yml"
+- include: "predeploy-interface-check.yml"

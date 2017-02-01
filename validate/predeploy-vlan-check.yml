@@ -1,0 +1,12 @@
+#
+# Check for unique VLANs. The simplest possible check
+# compares the lenght of list of unique VLANs with
+# the number of customers. Obviously this does not
+# tell us which VLAN is non-unique
+#
+- assert:
+    that: >
+      services.values()|map(attribute='vlan')|list|unique|length == 
+      services.keys()|length
+    msg:  "Non-unique customer VLAN found, aborting"
+  run_once: true

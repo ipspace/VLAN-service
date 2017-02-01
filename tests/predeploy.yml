@@ -10,6 +10,8 @@
     tags: [ always ]
   - include: "../validate/predeploy-node-check.yml"
     tags: [ nodes ]
+  - include: "../validate/predeploy-vlan-check.yml"
+    tags: [ vlans ]
   - set_fact: data="{{lookup('template','../templates/node-model.j2')}}"
     tags: [ interfaces ]
   - include: "../validate/predeploy-interface-check.yml"

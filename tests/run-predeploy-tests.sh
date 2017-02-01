@@ -19,6 +19,7 @@ if [ $? -ne 0 ]; then
 fi
 echo "  .. OK, proceeding"
 
+exitstatus=0
 for svctest in tests/services/svc-pdf-*.yml
 do
   echo "Running scenario $svctest"
@@ -26,7 +27,10 @@ do
   if [ $? -ne 0 ]; then
     echo "  .. failed as expected"
   else
-    echo ">>> DID NOT FAIL, exiting"
-    exit 1
+    echo "  >>> DID NOT FAIL"
+    exitstatus=1
   fi
 done 
+
+if [ $exitstatus -ne 0 ]; then echo "Test suite failed"; fi
+exit $exitstatus
