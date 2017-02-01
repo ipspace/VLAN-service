@@ -1,0 +1,16 @@
+---
+- include: "../validate/input-file-format.yml"
+
+- hosts: all
+  name:  Run pre-deploy checks
+  tasks:
+  - include_vars:
+      file: "{{svcs|default(inventory_dir~'/services.yml')}}"
+      name: "services"
+    tags: [ always ]
+  - include: "../validate/predeploy-node-check.yml"
+    tags: [ nodes ]
+  - set_fact: data="{{lookup('template','../templates/node-model.j2')}}"
+    tags: [ interfaces ]
+  - include: "../validate/predeploy-interface-check.yml"
+    tags: [ interfaces ]

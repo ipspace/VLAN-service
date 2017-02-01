@@ -1,4 +1,6 @@
 ---
+- include: "validate/input-file-format.yml"
+
 - hosts: all
   name:  configure VLAN service
   tasks:
@@ -8,12 +10,18 @@
     tags: [ always ]
   - include: tests/enable-debugging.yml
 
+  - include: "../validate/predeploy-node-check.yml"
+    tags: [ predeploy ]
+
   - set_fact: data="{{lookup('template','templates/node-model.j2')}}"
     tags: [ always ]
   - local_action: >
       copy content="{{data|to_nice_json}}"
            dest="{{debug_output}}/{{inventory_hostname}}-model.json"
     when: debug_output is defined
+
+  - include: "../validate/predeploy-interface-check.yml"
+    tags: [ predeploy ]
 
   - name: "Add/modify VLAN services"
     include: "provision/{{ansible_os}}-add.yml"

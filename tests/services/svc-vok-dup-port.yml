@@ -9,15 +9,5 @@ Wonka:
   vlan: 200
   state: absent
   ports:
-  - { node: leaf-1, port: "Ethernet2/3"}
+  - { node: leaf-1, port: "Ethernet2/1"}
   - { node: leaf-2, port: "Ethernet2/2" }
-
-Willy:
-  vlan: 100
-  ports:
-  - { node: leaf-1, port: "Ethernet2/4" }
-
-Coyote:
-  vlan: 202
-  ports:
-  - { node: leaf-2, port: "Ethernet2/5" }

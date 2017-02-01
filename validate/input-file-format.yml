@@ -1,0 +1,12 @@
+#
+# Validate correctness of input file(s)
+#
+---
+- hosts: localhost
+  name:  Validate services.yml with yamllint
+  gather_facts: no
+  vars:
+  - services_file: "{{svcs|default(inventory_dir~'/services.yml')}}"
+  tasks:
+  - shell: "yamllint {{services_file}} -c {{inventory_dir~'/.yamllint'}}"
+    changed_when: False

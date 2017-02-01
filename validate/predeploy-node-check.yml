@@ -1,0 +1,10 @@
+#
+# Validate node names in services data model and node reachability
+#
+- assert:
+    that: item.1.node in groups['all']
+    msg:  "Edge switch {{item.1.node}} using VLAN# {{item.0.vlan}} is unknown"
+  with_subelements:
+  - "{{services}}"
+  - ports
+  run_once: true

@@ -1,0 +1,15 @@
+#
+# Validate interface names in services data model
+#
+- name: Get VLAN information from the device in common data model
+  include: "../getinfo/{{ansible_os}}-get-interfaces.yml"
+  when: not(vlan_interfaces is defined)
+
+- assert:
+    that: item.key in vlan_interfaces.keys()
+    msg:  "Interface {{item.key}} is not present on node {{inventory_hostname}}"
+  with_dict: "{{data.ports}}"
+- assert:
+    that: item in vlan_interfaces.keys()
+    msg:  "Interface {{item}} is not present on node {{inventory_hostname}}"
+  with_items: "{{data.remove_ports}}"

@@ -10,3 +10,4 @@ rules:
     max-spaces-inside: 1
   indentation:
     indent-sequences: false
+  truthy: false
