@@ -1,0 +1,5 @@
+---
+{% for v in include
+     if vars[v] is defined %}
+{{v}}: {{vars[v]|to_nice_json(indent=2)|indent(2)}}
+{% endfor %}
