@@ -1,0 +1,25 @@
+---
+- hosts: all
+  name:  test variable dumps
+  vars:
+    input:  "{{inventory_dir}}/services.yml"
+    output: "{{inventory_dir}}/printouts"
+    model:  "../templates/node-model.j2"
+    dump:   "../templates/dump-variables.j2"
+  tasks:
+  - include_vars: 
+      file: "{{input}}" 
+      name: services
+    tags: [ always ]
+  - set_fact: data="{{lookup('template',model)}}"
+    tags: [ always ]
+  - debug: var=vars
+  - local_action: >
+      copy content="{{vars|to_yaml}}"
+           dest="{{output}}/{{inventory_hostname}}-vars.yml"
+  - local_action: >
+      template src="{{dump}}"
+               dest="{{output}}/{{inventory_hostname}}-dump.yml"
+    vars:
+      include: [ services,data ]
+
