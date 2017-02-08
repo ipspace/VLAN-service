@@ -2,7 +2,8 @@
 # List of tasks needed to provision new VLAN services on NX-OS
 #
 ---
-- nxos_vlan:
+- name: Add NX-OS VLANs
+  nxos_vlan:
     provider: "{{cli}}"
     vlan_id: "{{item.key}}" 
     name:    "{{item.value}}"
@@ -10,12 +11,14 @@
     admin_state: "up"
   with_dict: "{{data.vlans}}"
   register: provision_vlans
+  tags: [ print_action ]
 - local_action: >
     copy content="{{provision_vlans|to_nice_json}}"
          dest="{{debug_output}}/{{inventory_hostname}}-provision-vlans.json"
   when: debug_output is defined
 
-- nxos_interface:
+- name: Enable NX-OS Interfaces
+  nxos_interface:
     provider: "{{cli}}"
     admin_state: up
     interface:   "{{item.key}}"
@@ -24,12 +27,14 @@
   with_dict: "{{data.ports}}"
   when: "item.key"
   register: provision_interfaces
+  tags: [ print_action ]
 - local_action: >
     copy content="{{provision_interfaces|to_nice_json}}"
          dest="{{debug_output}}/{{inventory_hostname}}-provision-interfaces.json"
   when: debug_output is defined
 
-- nxos_switchport:
+- name: Enable NX-OS switchports
+  nxos_switchport:
     provider: "{{cli}}"
     mode:        access
     access_vlan: "{{item.value.vlan}}"
@@ -37,6 +42,7 @@
   with_dict: "{{data.ports}}"
   when: "item.key"
   register: provision_switchports
+  tags: [ print_action ]
 - local_action: >
     copy content="{{provision_switchports|to_nice_json}}"
          dest="{{debug_output}}/{{inventory_hostname}}-provision-switchports.json"
