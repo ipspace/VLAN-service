@@ -2,7 +2,8 @@
 # List of tasks needed to decommission VLAN services on NX-OS
 #
 ---
-- nxos_interface:
+- name: Shut down NX-OS interfaces
+  nxos_interface:
     provider: "{{cli}}"
     admin_state: down
     interface:   "{{item}}"
@@ -15,7 +16,8 @@
          dest="{{debug_output}}/{{inventory_hostname}}-remove-ports{{debug_phase|default('')}}.json"
   when: debug_output is defined
 
-- nxos_switchport:
+- name: Disable NX-OS switchports
+  nxos_switchport:
     provider: "{{cli}}"
     mode:        access
     access_vlan: 1
@@ -27,7 +29,8 @@
          dest="{{debug_output}}/{{inventory_hostname}}-remove-access{{debug_phase|default('')}}.json"
   when: debug_output is defined
 
-- nxos_vlan:
+- name: Remove NX-OS VLANs
+  nxos_vlan:
     provider: "{{cli}}"
     vlan_id: "{{item}}" 
     state:   "absent"
