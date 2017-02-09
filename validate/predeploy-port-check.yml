@@ -1,0 +1,11 @@
+#
+# Check for unique node/port combination using
+# a custom plugin
+#
+- set_fact:
+    dup_port: "{{services.values()|map(attribute='ports')|list|flatten|dupattr(attr=['node','port'])}}"
+- debug: var=dup_port
+- assert:
+    that: not dup_port
+    msg:  "Duplicate port: {{dup_port}}"
+  run_once: true
