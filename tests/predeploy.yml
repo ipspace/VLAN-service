@@ -12,6 +12,8 @@
     tags: [ nodes ]
   - include: "../validate/predeploy-vlan-check.yml"
     tags: [ vlans ]
+  - include: "../validate/predeploy-port-check.yml"
+    tags: [ ports ]
   - set_fact: data="{{lookup('template','../templates/node-model.j2')}}"
     tags: [ interfaces ]
   - include: "../validate/predeploy-interface-check.yml"

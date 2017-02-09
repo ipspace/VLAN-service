@@ -1,0 +1,52 @@
+---
+- hosts: localhost
+  tasks:
+  - include_vars:
+      file: "{{svcs}}"
+      name: "services"
+    when: svcs is defined
+  - set_fact: x={{services|dupattr}}
+    ignore_errors: true
+    register: result
+  - assert:
+      that: "'You have to specify attr=name' in result.exception"
+      msg:  "Something's wrong: plugin didn't detect missing attribute {{result.exception}}"
+
+  - set_fact: 
+      check: "{{[ { 'a': 100 }, { 'a' : 200} ]|dupattr(attr='a')}}"
+  - assert:
+      that: not check
+      msg:  "Failed on unique list: {{check}}"
+
+  - set_fact: 
+      check: "{{[ { 'a': 100 }, { 'a' : 100} ]|dupattr(attr='a')}}"
+  - assert:
+      that: check
+      msg:  "Failed on non-unique list: {{check}}"
+  - assert:
+      that: "'100}' in check|join"
+      msg:  "Unexpected duplicate list result: {{check}}"
+
+  - set_fact: 
+      check: "{{ { 'x':{ 'a': 100 }, 'y': { 'a' : 200} } |dupattr(attr='a')}}"
+  - assert:
+      that: not check
+      msg:  "Failed on unique dictionary: {{check}}"
+
+  - set_fact: 
+      check: "{{ { 'x':{ 'a': 100 }, 'y': { 'a' : 100} } |dupattr(attr='a')}}"
+  - assert:
+      that: check
+      msg:  "Failed on non-unique dictionary: {{check}}"
+  - assert:
+      that: "'x and y' in check|join or 'y and x' in check|join"
+      msg:  "Unexpected duplicate dictionary result: {{check}}"
+
+  - block:
+    - set_fact:
+        check: "{{services|dupattr(attr='vlan')}}"
+    - debug: var=check
+    - set_fact:
+        check: "{{services.values()|map(attribute='ports')|list|flatten|dupattr(attr=['node','port'])}}"
+    - debug: var=check
+    when: services is defined
