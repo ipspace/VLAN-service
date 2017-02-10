@@ -1,0 +1,14 @@
+{
+  "vlans": {
+  },
+  "remove_vlans": [
+    
+    100
+  ],
+  "vlan_list": [ 1  ],
+  "ports": {
+  },
+  "remove_ports": [
+    
+    "Ethernet2/1"  ]
+}

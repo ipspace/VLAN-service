@@ -1,0 +1,10 @@
+#
+# Sample transaction: remove port
+#
+cid: 42
+vlan: 100
+name: ACME
+state: absent
+ports:
+  - { node: leaf-1, port: "Ethernet2/1" }
+  - { node: leaf-2, port: "Ethernet2/3" }
