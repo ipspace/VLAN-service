@@ -8,6 +8,9 @@
     that: transaction.name is defined
     msg:  "Customer name is missing"
 - assert:
+    that: "' ' not in transaction.name"
+    msg:  "Customer name should not contain spaces"
+- assert:
     that: transaction.vlan is defined
     msg:  "VLAN ID is missing"
 - assert:
