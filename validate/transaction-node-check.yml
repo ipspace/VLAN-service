@@ -1,0 +1,7 @@
+#
+# Validate node names in services data model and node reachability
+#
+- assert:
+    that: item.node in groups['all']
+    msg:  "Edge switch {{item.node}} is unknown"
+  with_items: "{{transaction.ports}}"

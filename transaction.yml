@@ -1,23 +1,32 @@
 ---
-- include: "validate/input-file-format.yml"
-
-- hosts: all
-  name:  configure VLAN service
+- hosts: localhost
+  name:  Select network nodes participating in transaction
   tasks:
-  - include_vars:
-      file: "{{svcs|default(inventory_dir~'/services.yml')}}"
-      name: "services"
-    tags: [ always ]
+  - include: read-transaction-file.yml
   - include: tests/enable-debugging.yml
+  - include: validate/transaction-data.yml
+    tags: [ predeploy ]
+  - include: validate/transaction-node-check.yml
+  - name: Build the list of participating network nodes
+    add_host: 
+      name: "{{item.node}}"
+      groups: "deploy"
+    with_items: "{{transaction.ports}}"
+    tags: [ print_action ]
 
-  - set_fact: data="{{lookup('template','templates/node-model.j2')}}"
+- hosts: deploy
+  name:  configure a single VLAN transaction
+  tasks:
+  - include: read-transaction-file.yml
+  - include: tests/enable-debugging.yml
+  - set_fact: data="{{lookup('template','templates/transaction-to-node.j2')}}"
     tags: [ always ]
   - local_action: >
       copy content="{{data|to_nice_json}}"
            dest="{{debug_output}}/{{inventory_hostname}}-model.json"
     when: debug_output is defined
 
-  - include: "validate/predeploy-checks.yml"
+  - include: "validate/predeploy-interface-check.yml"
     tags: [ predeploy ]
 
   - name: "Add/modify VLAN services"
@@ -36,11 +45,3 @@
   - name: "Validate deployed VLAN services"
     include: "validate/deployed-services.yml"
     tags: [ validate ]
-
-  - name: "Prepare for cleanup"
-    include: "provision/cleanup-prepare.yml"
-    tags: [ cleanup ]
-
-  - name: "Execute cleanup"
-    include: "provision/{{ansible_os}}-remove.yml"
-    tags: [ cleanup ]

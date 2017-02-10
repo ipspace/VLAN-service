@@ -1,0 +1,19 @@
+#
+# Find transaction file based on tid variable and read it
+#
+- set_fact: transaction_file={{item}}
+  with_first_found:
+  - files: "{{tid}}"
+    paths:
+    - .
+    - "{{inventory_dir}}"
+  - files: "{{trans}}.yml"
+    paths:
+    - .
+    - "{{inventory_dir}}"
+    - tests/transactions
+  tags: [ always ]
+- include_vars:
+    file: "{{transaction_file}}"
+    name: "transaction"
+  tags: [ always ]
