@@ -13,10 +13,11 @@ The branches you can explore are:
 * ***VLAN_Decommission*** - add support for service decommissioning and customer site description in the services data model, which triggered changes in data model transformation and minor adjustments in service provisioning process.
 * ***VLAN_Validation*** - validates successful deployment of VLAN services: VLANs are created and configured as access VLANs on service ports.
 * ***VLAN_Cleanup*** - cleanup of VLANs and service ports no longer used by active services.
-* ***Debugging*** - add extensive logging when the *debug* variable is set
 * ***VLAN_PreDeploy_Check*** - check the actual hardware before service deployment
-* ***VLAN_MultiVendor*** - add multi-platform/vendor support
-* ***Database*** - integration with an external database
+* ***Logging*** - extensive logging and debugging support
+* ***Plugins*** - Jinja2 filter plugins are used for unique key and composite key tests
+* ***Transactions*** - integration with an external transaction system
+* ***MultiVendor*** - add multi-platform/vendor support
 
 ## Data model
 
