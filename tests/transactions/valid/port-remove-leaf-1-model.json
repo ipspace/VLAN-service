@@ -1,0 +1,14 @@
+{
+  "vlans": {
+    
+    "100": "ACME[42]"
+  },
+  "remove_vlans": [
+  ],
+  "vlan_list": [ 1 , 100 ],
+  "ports": {
+  },
+  "remove_ports": [
+    
+    "Ethernet2/1"  ]
+}

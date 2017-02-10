@@ -1,0 +1,15 @@
+{
+  "vlans": {
+    
+    "100": "ACME[42]"
+  },
+  "remove_vlans": [
+  ],
+  "vlan_list": [ 1 , 100 ],
+  "ports": {
+    "Ethernet2/1": { "vlan": 100, 
+       "description": "ACME [42] - Downtown " }
+      },
+  "remove_ports": [
+  ]
+}

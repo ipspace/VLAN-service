@@ -1,0 +1,38 @@
+---
+- hosts: all
+  name:  test data model
+  vars:
+    output: "{{inventory_dir}}/printouts"
+    model:  "../templates/transaction-to-node.j2"
+  tasks:
+  - set_fact:
+      input: "{{item}}"
+    with_first_found:
+    - files: "{{trans}}"
+    - files: "{{trans}}.yml"
+      paths:
+      - .
+      - "{{inventory_dir}}"
+      - transactions
+      - ../transactions
+      - ..
+      - ../..
+    tags: [ always ]
+  - include_vars:
+      file: "{{input}}"
+      name: transaction
+    tags: [ always ]
+  - set_fact:
+      trans_id: "{% set x = trans|basename %}{{ x.split('.')[0] }}"
+    tags: [ always ]
+  - block:
+    - template:
+        src:  "{{model}}"
+        dest: "{{output}}/{{trans_id}}-{{inventory_hostname}}-model.json"
+      tags: [ always ]
+    - shell: jq --argfile a {{output}}/{{trans_id}}-{{inventory_hostname}}-model.json --argfile b transactions/valid/{{trans_id}}-{{inventory_hostname}}-model.json -n '$a == $b'
+      register: result
+      failed_when: "'true' not in result.stdout"
+      changed_when: false
+      tags: [ validate ]
+    when: "inventory_hostname in transaction.ports|map(attribute='node')"

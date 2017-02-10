@@ -1,0 +1,8 @@
+#
+# Sample transaction: add port
+#
+cid: 42
+vlan: 100
+name: ACME
+ports:
+  - { node: leaf-1, port: "Ethernet2/1", site: "Downtown" }

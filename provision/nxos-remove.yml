@@ -11,6 +11,7 @@
     description: "No service on this port"
   with_items: "{{data.remove_ports}}"
   register: nxos_remove_ports
+  tags: [ print_action ]
 - local_action: >
     copy content="{{nxos_remove_ports|to_nice_json}}"
          dest="{{debug_output}}/{{inventory_hostname}}-remove-ports{{debug_phase|default('')}}.json"
@@ -24,6 +25,7 @@
     interface:   "{{item}}"
   with_items: "{{data.remove_ports}}"
   register: nxos_remove_access
+  tags: [ print_action ]
 - local_action: >
     copy content="{{nxos_remove_access|to_nice_json}}"
          dest="{{debug_output}}/{{inventory_hostname}}-remove-access{{debug_phase|default('')}}.json"
@@ -36,6 +38,7 @@
     state:   "absent"
   with_items: "{{data.remove_vlans}}"
   register: nxos_remove_vlans
+  tags: [ print_action ]
 - local_action: >
     copy content="{{nxos_remove_vlans|to_nice_json}}"
          dest="{{debug_output}}/{{inventory_hostname}}-remove-vlans{{debug_phase|default('')}}.json"

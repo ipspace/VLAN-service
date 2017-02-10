@@ -1,0 +1,26 @@
+#
+# Validate data supplied in a transaction
+#
+- assert:
+    that: transaction.cid is defined
+    msg:  "Customer ID is missing"
+- assert:
+    that: transaction.name is defined
+    msg:  "Customer name is missing"
+- assert:
+    that: transaction.vlan is defined
+    msg:  "VLAN ID is missing"
+- assert:
+    that: transaction.ports is defined
+    msg:  "List of ports is missing"
+- assert:
+    that: (item.node is defined) and (item.port is defined)
+    msg:  "Node name or interface name is missing in the list of ports"
+  with_items: "{{transaction.ports}}"
+- assert:
+    that: >
+      item.site is defined or 
+        (item.state|default('') == 'absent') or 
+        (transaction.state|default('') == 'absent')
+    msg:  "One of the non-absent customer ports has no description"
+  with_items: "{{transaction.ports}}"

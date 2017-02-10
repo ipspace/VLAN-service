@@ -1,0 +1,30 @@
+{
+  "vlans": {
+{% if transaction.state|default("") != "absent" %}    
+    "{{transaction.vlan}}": "{{transaction.name}}[{{transaction.cid}}]"
+{% endif %}
+  },
+  "remove_vlans": [
+{% if transaction.state|default("") == "absent" %}    
+    {{transaction.vlan}}
+{% endif %}
+  ],
+  "vlan_list": [ 1 {% if transaction.state|default("") != "absent" %}, {{transaction.vlan}}{% endif %} ],
+  "ports": {
+{% if transaction.state|default("") != "absent" %}
+{%   for p in transaction.ports 
+       if p.node == inventory_hostname and p.state|default("") != "absent" %}
+    "{{p.port}}": { "vlan": {{transaction.vlan}}, 
+       "description": "{{transaction.name}} [{{transaction.cid}}]{% if p.site is defined %} - {{p.site}} {% endif %}" }
+    {% if not loop.last %},{% endif %}
+{%   endfor %}
+{% endif %}
+  },
+  "remove_ports": [
+{% for p in transaction.ports if p.node == inventory_hostname %}
+{%   if transaction.state|default("") == "absent" or p.state|default("") == "absent" %}    
+    "{{p.port}}"{% if not loop.last %},{% endif %}
+{%   endif %}
+{% endfor %}
+  ]
+}

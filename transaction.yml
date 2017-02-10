@@ -1,0 +1,47 @@
+---
+- hosts: localhost
+  name:  Select network nodes participating in transaction
+  tasks:
+  - include: read-transaction-file.yml
+  - include: tests/enable-debugging.yml
+  - include: validate/transaction-data.yml
+    tags: [ predeploy ]
+  - include: validate/transaction-node-check.yml
+  - name: Build the list of participating network nodes
+    add_host: 
+      name: "{{item.node}}"
+      groups: "deploy"
+    with_items: "{{transaction.ports}}"
+    tags: [ print_action ]
+
+- hosts: deploy
+  name:  configure a single VLAN transaction
+  tasks:
+  - include: read-transaction-file.yml
+  - include: tests/enable-debugging.yml
+  - set_fact: data="{{lookup('template','templates/transaction-to-node.j2')}}"
+    tags: [ always ]
+  - local_action: >
+      copy content="{{data|to_nice_json}}"
+           dest="{{debug_output}}/{{inventory_hostname}}-model.json"
+    when: debug_output is defined
+
+  - include: "validate/predeploy-interface-check.yml"
+    tags: [ predeploy ]
+
+  - name: "Add/modify VLAN services"
+    include: "provision/{{ansible_os}}-add.yml"
+    tags: [ add, config ]
+
+  - name: "Remove decommissioned VLAN services"
+    include: "provision/{{ansible_os}}-remove.yml"
+    tags: [ remove, config ]
+
+  - name: "Reset interface facts"
+    set_fact:
+      vlan_list:       []
+      vlan_interfaces: []
+
+  - name: "Validate deployed VLAN services"
+    include: "validate/deployed-services.yml"
+    tags: [ validate ]
