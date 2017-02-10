@@ -1,0 +1,25 @@
+{
+  "vlans": {
+{% for customer,svc in services.iteritems()
+     if inventory_hostname in svc.ports|map(attribute='node') %}
+    "{{svc.vlan}}": "{{customer}}"{% if not(loop.last) %},{% endif %}
+
+{% endfor %}
+  },
+  "vlan_list": [ 1,
+{% for customer,svc in services.iteritems() %}
+{%   if inventory_hostname in svc.ports|map(attribute='node') %}
+    {{svc.vlan}}{% if not(loop.last) %},{% endif %}
+{%   endif %}
+{% endfor %}
+  ],
+  "ports": {
+{% set count = [] %}
+{% for customer,svc in services.iteritems() %}
+{%   for p in svc.ports if p.node == inventory_hostname %}
+{% if count|length > 0 %},{% endif %}{% set _ = count.append(1) %}
+    "{{p.port}}": { "vlan": {{svc.vlan}}, "description": "{{customer}} - {{p.site|default("")}}" }
+{%   endfor %}
+{% endfor %}
+  }
+}
